@@ -1,0 +1,50 @@
+using Cinemachine;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+public class SaveController : MonoBehaviour
+{
+    private string saveLocation;
+
+    void Start()
+    {
+        saveLocation = Path.Combine(Application.persistentDataPath, "SaveData.json");
+
+        
+        LoadGame();
+    }
+
+    public void SaveGame()
+    {
+        SaveData saveData = new SaveData
+        {
+            playerPosition = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().position,
+            mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name
+        };
+
+        File.WriteAllText(saveLocation, JsonUtility.ToJson(saveData));
+    }
+
+    public void LoadGame()
+    {
+        if (File.Exists(saveLocation))
+        {
+            SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(saveLocation));
+
+            var player = GameObject.FindGameObjectWithTag("Player");
+            var rb = player.GetComponent<Rigidbody2D>();
+
+            rb.velocity = Vector2.zero;
+            rb.position = saveData.playerPosition;
+
+            FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D =
+                GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
+        }
+        else
+        {
+            SaveGame();
+        }
+    }
+}
