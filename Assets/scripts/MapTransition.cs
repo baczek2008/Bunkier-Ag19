@@ -9,6 +9,8 @@ public class CameraDirectionalTransition : MonoBehaviour
     [SerializeField] private PolygonCollider2D roomBegin;
     [SerializeField] private PolygonCollider2D roomEnd;
 
+    [SerializeField] private float pushDistance = 1.5f; 
+
     private CinemachineConfiner confiner;
     private Vector3 lastPlayerPos;
     private bool canSwitch = true;
@@ -24,24 +26,43 @@ public class CameraDirectionalTransition : MonoBehaviour
             return;
 
         Vector3 currentPos = collision.transform.position;
+        Transform player = collision.transform;
 
         PolygonCollider2D targetRoom;
 
         if (axis == Axis.Horizontal)
         {
-            // sprawdzamy kierunek ruchu X
             if (currentPos.x > lastPlayerPos.x)
-                targetRoom = roomEnd;   // idzie w prawo
+            {
+                targetRoom = roomEnd;
+
+                
+                player.position += new Vector3(pushDistance, 0f, 0f);
+            }
             else
-                targetRoom = roomBegin; // idzie w lewo
+            {
+                targetRoom = roomBegin;
+
+                
+                player.position += new Vector3(-pushDistance, 0f, 0f);
+            }
         }
         else
         {
-            // sprawdzamy kierunek ruchu Y
             if (currentPos.y > lastPlayerPos.y)
-                targetRoom = roomEnd;   // idzie w górê
+            {
+                targetRoom = roomEnd;
+
+                
+                player.position += new Vector3(0f, pushDistance, 0f);
+            }
             else
-                targetRoom = roomBegin; // idzie w dó³
+            {
+                targetRoom = roomBegin;
+
+               
+                player.position += new Vector3(0f, -pushDistance, 0f);
+            }
         }
 
         confiner.m_BoundingShape2D = targetRoom;
@@ -60,7 +81,6 @@ public class CameraDirectionalTransition : MonoBehaviour
 
     private void Update()
     {
-        // zapisujemy ostatni¹ pozycjê gracza
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {

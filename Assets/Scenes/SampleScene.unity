@@ -23144,6 +23144,7 @@ MonoBehaviour:
   axis: 1
   roomBegin: {fileID: 681001688}
   roomEnd: {fileID: 26427600}
+  pushDistance: 0.75
 --- !u!61 &1724569806
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -23685,7 +23686,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_Follow: {fileID: 1903946849}
   m_Lens:
     FieldOfView: 34
     OrthographicSize: 4
